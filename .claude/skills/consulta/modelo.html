@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Consulta de CCTs</title><style>
+:root{
+  --page:#f6f6f3; --surface:#ffffff; --surface-2:#fafaf8; --ink:#16181d; --ink-2:#4b4f58; --muted:#80838b;
+  --line:#e4e4df; --line-2:#d3d3cc; --accent:#1f5fbf; --accent-soft:#e8f0fc;
+  --ok:#1d7a4f; --ok-soft:#e5f3ec; --warn:#a15c00; --warn-soft:#fdf1dc; --no:#6b6e76; --no-soft:#efefec;
+  --danger:#b3261e; --danger-soft:#fbe9e7; --radius:12px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em}
+h2{font-size:20px;margin:0 0 4px}
+h3{font-size:16px;margin:0}
+p{margin:0 0 8px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:999px}
+.pedido{font-size:16px;color:var(--ink-2);max-width:820px}
+.meta{color:var(--muted);font-size:13px}
+.sec{margin-top:28px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+.sec-head p{color:var(--ink-2);margin:0;font-size:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+/* funil */
+.funil{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.passo{padding:16px 18px;position:relative;border-right:1px solid var(--line)}
+.passo:last-child{border-right:0}
+.passo .n{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.passo .l{color:var(--ink-2);font-size:13px}
+.passo.final{background:var(--accent-soft)}
+.passo.final .n{color:var(--accent)}
+.tempo{margin-top:10px;color:var(--ink-2);font-size:13px}
+/* resumo por informação */
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.card .t{font-weight:600;font-size:14px;margin-bottom:8px}
+.barra{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--no-soft);margin-bottom:8px}
+.barra span{display:block;height:100%}
+.barra .sim{background:var(--ok)} .barra .parcial{background:#e0a030} .barra .nao{background:#c9cac4}
+.card .nums{font-size:13px;color:var(--ink-2)}
+.card .nums b{color:var(--ink)}
+/* barra de ferramentas */
+.ferramentas{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.busca{flex:1 1 260px;min-width:0;padding:9px 12px;border:1px solid var(--line-2);border-radius:8px;font:inherit;background:var(--surface)}
+.busca:focus{outline:2px solid var(--accent);outline-offset:1px}
+.legenda{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.btn{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface);cursor:pointer;color:var(--ink)}
+.btn:hover{border-color:var(--ink-2)}
+/* chips de status */
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.sim{color:var(--ok);background:var(--ok-soft)}
+.st.parcial{color:var(--warn);background:var(--warn-soft)}
+.st.nao{color:var(--no);background:var(--no-soft)}
+/* tabela */
+.tabela-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;min-width:980px;font-size:13.5px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+thead th{position:sticky;top:0;background:var(--surface-2);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);z-index:1}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.cct{min-width:190px}
+td.cct .nome{font-weight:650}
+td.cct .sub{color:var(--muted);font-size:12px}
+td.cct .venc{color:var(--danger);font-size:12px;font-weight:600}
+td .v{display:block;margin-top:4px}
+td.nao .v{color:var(--muted)}
+/* detalhes */
+details.cct{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;scroll-margin-top:12px}
+details.cct[open]{border-color:var(--line-2)}
+details.cct summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+details.cct summary::-webkit-details-marker{display:none}
+details.cct summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details.cct[open] summary::before{transform:rotate(90deg)}
+summary .nome{font-weight:650;font-size:15.5px}
+summary .sub{color:var(--muted);font-size:13px}
+summary .pills{margin-left:auto;display:flex;gap:4px}
+.pill{width:10px;height:10px;border-radius:3px;display:inline-block}
+.pill.sim{background:var(--ok)} .pill.parcial{background:#e0a030} .pill.nao{background:#c9cac4}
+.corpo{padding:0 18px 18px}
+.dados{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.dado{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.dado .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.dado .val{font-weight:600}
+.lojas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.loja{font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--ink-2)}
+.info{display:grid;grid-template-columns:170px 1fr;gap:6px 16px;padding:12px 0;border-top:1px solid var(--line)}
+.info .rot{font-weight:600}
+.info .rot .st{margin-top:4px}
+.info .fonte{font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.info blockquote{margin:6px 0 0;padding:6px 10px;border-left:3px solid var(--line-2);background:var(--surface-2);font-size:13px;color:var(--ink-2);border-radius:0 6px 6px 0}
+.obs{margin-top:12px;padding:10px 12px;background:var(--warn-soft);border-radius:8px;font-size:13.5px}
+.obs ul{margin:4px 0 0;padding-left:18px}
+/* complementares e alertas */
+.comp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.comp .box h3{margin-bottom:2px}
+.comp .box .sub{color:var(--muted);font-size:13px;margin-bottom:8px}
+.comp .box .he{font-size:13px;color:var(--ink-2);margin-top:8px}
+.alertas{display:grid;gap:8px}
+.alerta{display:grid;grid-template-columns:190px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid #e0a030;border-radius:8px;padding:10px 14px;font-size:14px}
+.alerta .tipo{font-weight:600;color:var(--warn)}
+.como{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.como .box{padding:16px}
+.como .num{font-size:12px;font-weight:700;color:var(--accent)}
+.code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+footer{margin-top:36px;color:var(--muted);font-size:13px;text-align:center}
+.oculto{display:none!important}
+@media (max-width:900px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .funil{grid-template-columns:repeat(2,1fr)}
+  .passo:nth-child(2){border-right:0}
+  .passo:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .dados{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .comp,.como{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .wrap{padding:20px 16px 40px}
+  h1{font-size:24px}
+  .cards{grid-template-columns:1fr}
+  .info,.alerta{grid-template-columns:1fr}
+  summary .pills{margin-left:0}
+}
+@media print{
+  body{background:#fff}
+  .ferramentas,.btn{display:none}
+  details.cct{break-inside:avoid}
+  details.cct .corpo{display:block}
+}
+</style></head><body><div class="wrap">
+<header>
+  <span class="eyebrow">Exemplo para validação · Cargos e Salários · MODELO</span>
+  <h1>Consulta de CCTs atrasadas</h1>
+  <p class="pedido"><b>Pedido:</b> CCTs atrasadas (vigência vencida): piso salarial, reajuste salarial, quebra de caixa, horas extras e auxílio creche.</p>
+  <p class="meta">Gerado em 11/11/2026 pelo agente de consulta de CCTs · fonte: convenções registradas no Mediador (pasta CCTS) ·
+  “atrasada” = vigência terminada antes de hoje</p>
+</header>
+
+<section class="sec">
+  <div class="funil">
+    <div class="passo"><div class="n">259</div><div class="l">arquivos na pasta</div></div>
+    <div class="passo"><div class="n">69</div><div class="l">CCTs diferentes (várias lojas usam a mesma)</div></div>
+    <div class="passo"><div class="n">20</div><div class="l">CCTs atrasadas · 60 arquivos de 47 lojas</div></div>
+    <div class="passo final"><div class="n">2 × 5</div><div class="l">CCTs principais lidas × informações extraídas</div></div>
+  </div>
+  <p class="tempo">Leitura dos PDFs: 2,9 s · filtro das atrasadas: 0,3 s · a IA leu só as cláusulas necessárias
+  (cerca de 100 mil caracteres, em vez de 600 mil das CCTs inteiras).</p>
+</section>
+
+<section class="sec"><div class="sec-head"><h2>Resumo por informação</h2><p>nas 2 CCTs principais atrasadas</p></div><div class="cards">
+<div class="card"><div class="t">Piso salarial</div><div class="barra"><span class="sim" style="width:100.0%"></span></div><div class="nums"><b>2</b> encontrado · <b>0</b> parcial · <b>0</b> não consta</div></div>
+<div class="card"><div class="t">Reajuste salarial</div><div class="barra"><span class="sim" style="width:50.0%"></span><span class="parcial" style="width:50.0%"></span></div><div class="nums"><b>1</b> encontrado · <b>1</b> parcial · <b>0</b> não consta</div></div>
+<div class="card"><div class="t">Quebra de caixa</div><div class="barra"><span class="sim" style="width:100.0%"></span></div><div class="nums"><b>2</b> encontrado · <b>0</b> parcial · <b>0</b> não consta</div></div>
+<div class="card"><div class="t">Horas extras</div><div class="barra"><span class="sim" style="width:100.0%"></span></div><div class="nums"><b>2</b> encontrado · <b>0</b> parcial · <b>0</b> não consta</div></div>
+<div class="card"><div class="t">Auxílio creche</div><div class="barra"><span class="parcial" style="width:50.0%"></span><span class="nao" style="width:50.0%"></span></div><div class="nums"><b>0</b> encontrado · <b>1</b> parcial · <b>1</b> não consta</div></div>
+</div></section>
+<section class="sec"><div class="sec-head"><h2>Resultado por CCT</h2><p>Clique numa linha para ver a cláusula e o trecho de cada informação.</p></div>
+<div class="ferramentas">
+  <input id="busca" class="busca" type="search" placeholder="Filtrar por cidade, loja (ex.: 044) ou sindicato (ex.: SIND0040)" aria-label="Filtrar">
+  <div class="legenda"><span class="st sim">Encontrado</span><span class="st parcial">Parcial</span><span class="st nao">Não consta</span></div>
+</div>
+<div class="tabela-wrap"><table><thead><tr><th>CCT</th>
+<th>Piso salarial</th><th>Reajuste salarial</th><th>Quebra de caixa</th><th>Horas extras</th><th>Auxílio creche</th>
+</tr></thead><tbody>
+<tr data-id="279e57db96" data-busca="concordia sind0030 279e57db96 040_concordia_concordia_sind0030__1.pdf 665_ipira_concordia_sind0030__1.pdf 040 665"><td class="cct"><div class="nome">Concórdia</div><div class="sub">SIND0030 · 2 loja(s)</div><div class="venc">venceu 31/10/2026 · há 11 dias</div></td>
+<td class="sim" title="CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO (pág. 1)"><span class="st sim">Encontrado</span><span class="v">R$ 2.070,00</span></td>
+<td class="sim" title="CLÁUSULA QUARTA - REAJUSTE SALARIAL (pág. 2)"><span class="st sim">Encontrado</span><span class="v">6,20%</span></td>
+<td class="sim" title="CLÁUSULA DÉCIMA SEGUNDA - QUEBRA DE CAIXA (pág. 4)"><span class="st sim">Encontrado</span><span class="v">30% do salário mínimo nacional</span></td>
+<td class="sim" title="CLÁUSULA DÉCIMA TERCEIRA - HORA EXTRAORDINÁRIA (pág. 5)"><span class="st sim">Encontrado</span><span class="v">60%</span></td>
+<td class="parcial" title="CLÁUSULA DÉCIMA QUINTA - AUXÍLIO MÃE COMERCIÁRIA (pág. 5)"><span class="st parcial">Parcial</span><span class="v">Só auxílio mãe comerciária (10% do piso, filhos até 12 meses)</span></td>
+</tr>
+<tr data-id="f31c50934a" data-busca="nova andradina sind0236 f31c50934a 571_nova andradina_sec nova andradina_sind0236.pdf 614_bataguassu_sec nova andradina_sind0236.pdf 571 614"><td class="cct"><div class="nome">Nova Andradina</div><div class="sub">SIND0236 · 2 loja(s)</div><div class="venc">venceu 31/10/2026 · há 11 dias</div></td>
+<td class="sim" title="CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO DA CATEGORIA (pág. 1-2)"><span class="st sim">Encontrado</span><span class="v">R$ 1.800,00 · operador de caixa R$ 1.833,00</span></td>
+<td class="parcial" title="CLÁUSULA QUARTA - REAJUSTE SALARIAL (pág. 2)"><span class="st parcial">Parcial</span><span class="v">7% (o extenso diz “nove e meio”)</span></td>
+<td class="sim" title="CLÁUSULA DÉCIMA - QUEBRA DE CAIXA (pág. 4)"><span class="st sim">Encontrado</span><span class="v">10% do piso</span></td>
+<td class="sim" title="CLÁUSULA TRIGÉSIMA SEGUNDA - HORAS EXTRAORDINÁRIAS (pág. 12)"><span class="st sim">Encontrado</span><span class="v">60% · 100% em feriados e repouso</span></td>
+<td class="nao" title="A CCT não trata deste assunto (conferido no sumário e na busca pelo texto inteiro)."><span class="st nao">Não consta</span><span class="v">—</span></td>
+</tr>
+</tbody></table></div></section>
+<section class="sec"><div class="sec-head"><h2>Detalhe de cada CCT</h2><div><button class="btn" id="abrir">Abrir todas</button> <button class="btn" id="fechar">Fechar todas</button></div></div>
+<details class="cct" id="cct-279e57db96" data-busca="concordia sind0030 279e57db96 040_concordia_concordia_sind0030__1.pdf 665_ipira_concordia_sind0030__1.pdf 040 665" open><summary><span class="nome">Concórdia</span><span class="sub">SIND0030 · CCT [279e57db96] · CONVENÇÃO COLETIVA DE TRABALHO 2025/2026</span><span class="pills"><span class="pill sim" title="Piso salarial: Encontrado"></span><span class="pill sim" title="Reajuste salarial: Encontrado"></span><span class="pill sim" title="Quebra de caixa: Encontrado"></span><span class="pill sim" title="Horas extras: Encontrado"></span><span class="pill parcial" title="Auxílio creche: Parcial"></span></span></summary><div class="corpo"><div class="dados"><div class="dado"><div class="k">Vigência</div><div class="val">01/11/2025 a 31/10/2026</div></div><div class="dado"><div class="k">Atraso</div><div class="val" style="color:var(--danger)">11 dias</div></div><div class="dado"><div class="k">Data-base</div><div class="val">01º de novembro</div></div><div class="dado"><div class="k">Páginas</div><div class="val">18</div></div></div><div class="lojas"><span class="loja">040_CONCORDIA_CONCÓRDIA_SIND0030__1</span><span class="loja">665_IPIRA_CONCÓRDIA_SIND0030__1</span></div>
+<div class="info"><div class="rot">Piso salarial<br><span class="st sim">Encontrado</span></div><div><div>Salário normativo único de R$ 2.070,00, inclusive comissionistas, para Alto Bela Vista, Arabutã, Concórdia, Ipira, Ipumirim, Irani, Itá, Jaborá, Lindóia do Sul, Peritiba, Piratuba e Presidente Castello Branco.</div><div class="fonte">Fonte: CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO · pág. 1</div><blockquote>“Presidente Castello Branco - R$ 2.070,00 (dois mil e setenta reais)”</blockquote></div></div>
+<div class="info"><div class="rot">Reajuste salarial<br><span class="st sim">Encontrado</span></div><div><div>6,20% aplicado sobre os salários vigentes em outubro/2025 (a mesma frase também cita os salários de novembro/2024). Quem já tinha fechado a folha paga as diferenças junto com dezembro/2025.</div><div class="fonte">Fonte: CLÁUSULA QUARTA - REAJUSTE SALARIAL · pág. 2</div><blockquote>“serão reajustados pelo percentual de 6,20% (seis virgula vinte por cento), aplicados sobre os salários vigentes em outubro de 2025”</blockquote></div></div>
+<div class="info"><div class="rot">Quebra de caixa<br><span class="st sim">Encontrado</span></div><div><div>30% sobre o salário mínimo nacional, todo mês, para quem exerce função de caixa ou cobrador; não pode ser proporcional. Não é devido a vendedores que cobram em caixas automatizados só com cartão.</div><div class="fonte">Fonte: CLÁUSULA DÉCIMA SEGUNDA - QUEBRA DE CAIXA · pág. 4</div><blockquote>“com percentual de 30% (trinta inteiros por cento) sobre o salário mínimo nacional”</blockquote></div></div>
+<div class="info"><div class="rot">Horas extras<br><span class="st sim">Encontrado</span></div><div><div>60% sobre a hora normal. Comissionistas: base no salário normativo + 60%; em balanços, base nas comissões do mês + 60%.</div><div class="fonte">Fonte: CLÁUSULA DÉCIMA TERCEIRA - HORA EXTRAORDINÁRIA · pág. 5</div><blockquote>“remunerada com o adicional de 60% (sessenta inteiros por cento) sobre o valor da hora normal”</blockquote></div></div>
+<div class="info"><div class="rot">Auxílio creche<br><span class="st parcial">Parcial</span></div><div><div>Não há auxílio creche. Existe o auxílio mãe comerciária: 10% do salário normativo para mães com filhos de 0 a 12 meses, pago a partir do fim da licença-maternidade (na falta da mãe, ao pai ou responsável).</div><div class="fonte">Fonte: CLÁUSULA DÉCIMA QUINTA - AUXÍLIO MÃE COMERCIÁRIA · pág. 5</div><blockquote>“um auxílio correspondente à 10% (dez inteiros por cento) do salário normativo da categoria, sendo pago a partir do término da licença maternidade”</blockquote></div></div>
+<div class="obs"><b>Observações</b><ul><li>O Mediador classifica o auxílio mãe comerciária no grupo “Auxílio Creche”, mas não é auxílio creche.</li><li>As lojas 040 e 665 também têm a CCT complementar de compensação de horas [baf872eb98], também vencida.</li></ul></div>
+</div></details>
+<details class="cct" id="cct-f31c50934a" data-busca="nova andradina sind0236 f31c50934a 571_nova andradina_sec nova andradina_sind0236.pdf 614_bataguassu_sec nova andradina_sind0236.pdf 571 614"><summary><span class="nome">Nova Andradina</span><span class="sub">SIND0236 · CCT [f31c50934a] · CONVENÇÃO COLETIVA DE TRABALHO 2025/2026</span><span class="pills"><span class="pill sim" title="Piso salarial: Encontrado"></span><span class="pill parcial" title="Reajuste salarial: Parcial"></span><span class="pill sim" title="Quebra de caixa: Encontrado"></span><span class="pill sim" title="Horas extras: Encontrado"></span><span class="pill nao" title="Auxílio creche: Não consta"></span></span></summary><div class="corpo"><div class="dados"><div class="dado"><div class="k">Vigência</div><div class="val">01/11/2025 a 31/10/2026</div></div><div class="dado"><div class="k">Atraso</div><div class="val" style="color:var(--danger)">11 dias</div></div><div class="dado"><div class="k">Data-base</div><div class="val">01º de novembro</div></div><div class="dado"><div class="k">Páginas</div><div class="val">20</div></div></div><div class="lojas"><span class="loja">571_NOVA ANDRADINA_SEC NOVA ANDRADINA_SIND0236</span><span class="loja">614_BATAGUASSU_SEC NOVA ANDRADINA_SIND0236</span></div>
+<div class="info"><div class="rot">Piso salarial<br><span class="st sim">Encontrado</span></div><div><div>A partir de 01/11/2025: R$ 1.800,00 (ressalvada jornada reduzida); operador de caixa R$ 1.833,00. Salário misto: o fixo não pode ser menor que o piso.</div><div class="fonte">Fonte: CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO DA CATEGORIA · pág. 1-2</div><blockquote>“o piso salarial para os operadores de caixa será de R$ 1.833,00”</blockquote></div></div>
+<div class="info"><div class="rot">Reajuste salarial<br><span class="st parcial">Parcial</span></div><div><div>7% em 01/11/2025 sobre os salários vigentes em 31/10/2025. Atenção: no texto, o número (7%) e o extenso (“nove e meio por cento”) não batem.</div><div class="fonte">Fonte: CLÁUSULA QUARTA - REAJUSTE SALARIAL · pág. 2</div><blockquote>“em 7% (nove e meio por cento), índice este aplicado sobre os salários vigentes em 31/10/2025”</blockquote></div></div>
+<div class="info"><div class="rot">Quebra de caixa<br><span class="st sim">Encontrado</span></div><div><div>Gratificação de 10% sobre o piso da categoria para caixa ou assemelhado, com reflexo em 13º, férias e rescisão.</div><div class="fonte">Fonte: CLÁUSULA DÉCIMA - QUEBRA DE CAIXA · pág. 4</div><blockquote>“terão gratificação de 10% (dez por cento), calculado sobre o piso da categoria”</blockquote></div></div>
+<div class="info"><div class="rot">Horas extras<br><span class="st sim">Encontrado</span></div><div><div>60% sobre a hora normal; horas em feriados e no dia de repouso, não compensadas: 100%. Horas extras habituais integram a remuneração.</div><div class="fonte">Fonte: CLÁUSULA TRIGÉSIMA SEGUNDA - HORAS EXTRAORDINÁRIAS · pág. 12</div><blockquote>“as horas suplementares serão remuneradas com o adicional de 60% (sessenta por cento)”</blockquote></div></div>
+<div class="info"><div class="rot">Auxílio creche<br><span class="st nao">Não consta</span></div><div><div>A CCT não trata deste assunto (conferido no sumário e na busca pelo texto inteiro).</div></div></div>
+</div></details>
+</section>
+<section class="sec"><div class="sec-head"><h2>CCTs complementares atrasadas</h2><p>Acordos curtos sobre horário, feriados ou compensação. Não tratam de piso, reajuste, quebra de caixa nem creche.</p></div><div class="comp">
+<div class="box" data-busca="novo hamburgo (feriados) sind0031 511962cf10 056_novo hamburgo_novo hamburgo_sind0031__2.pdf 084_campo bom_novo hamburgo_sind0031__2.pdf 201_novo hamburgo_novo hamburgo_sind0031__2.pdf 442_novo hamburgo_novo hamburgo_sind0031__2.pdf 056 084 201 442"><h3>Novo Hamburgo (feriados)</h3><div class="sub">SIND0031 · CCT [511962cf10] · Trabalho em feriados · venceu 30/09/2026</div><p>Proíbe trabalhar em 1º de janeiro, 1º de maio, Sexta-feira Santa e Natal. Nos demais feriados: prêmio de R$ 113,00 mais folga compensatória (para associados ou quem autoriza a contribuição); os demais só têm a folga.</p><div class="he"><b>Horas extras:</b> Não trata de horas extras.</div><div class="he"><b>Lojas:</b> 056, 084, 201, 442 · CCT principal destas lojas: [821cb168c4], também atrasada.</div></div>
+</div></section>
+<section class="sec"><div class="sec-head"><h2>Pontos de atenção</h2><p>O que a leitura encontrou e precisa de conferência humana.</p></div><div class="alertas">
+<div class="alerta"><div class="tipo">Divergência no texto</div><div>Nova Andradina [f31c50934a]: o reajuste está escrito “7% (nove e meio por cento)”.</div></div>
+<div class="alerta"><div class="tipo">Divergência no texto</div><div>Novo Hamburgo [821cb168c4]: piso de comissionista escrito “R$ 2.070,00,00”.</div></div>
+</div></section>
+<section class="sec"><div class="sec-head"><h2>Como este relatório foi gerado</h2></div><div class="como">
+<div class="box"><div class="num">1 · SEM IA</div><h3>Leitura e filtro</h3><p>Um programa lê os PDFs da pasta, junta as lojas que usam a mesma CCT e separa as atrasadas pela data de vigência.</p></div>
+<div class="box"><div class="num">2 · IA</div><h3>Leitura das cláusulas certas</h3><p>O agente consulta o sumário de cada CCT e lê só as cláusulas das informações pedidas, citando a fonte.</p></div>
+<div class="box"><div class="num">3 · RESULTADO</div><h3>Pedido livre</h3><p>As informações mudam a cada consulta: basta escrever o que procura, por exemplo <span class="code">/consulta CCTs atrasadas com auxílio creche</span>.</p></div>
+</div></section>
+<footer>Gerado automaticamente pelo agente de consulta de CCTs · 11/11/2026</footer></div><script>
+const busca = document.getElementById('busca');
+function filtrar(){
+  const q = busca.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  document.querySelectorAll('[data-busca]').forEach(el=>{
+    el.classList.toggle('oculto', q !== '' && !el.dataset.busca.includes(q));
+  });
+}
+busca.addEventListener('input', filtrar);
+document.querySelectorAll('tbody tr[data-id]').forEach(tr=>{
+  tr.addEventListener('click', ()=>{
+    const d = document.getElementById('cct-' + tr.dataset.id);
+    d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+document.getElementById('abrir').addEventListener('click', ()=>document.querySelectorAll('details.cct').forEach(d=>d.open=true));
+document.getElementById('fechar').addEventListener('click', ()=>document.querySelectorAll('details.cct').forEach(d=>d.open=false));
+</script></body></html>
