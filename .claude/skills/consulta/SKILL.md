@@ -23,14 +23,26 @@ Se o pedido estiver vazio, pergunte ao usuário o que ele procura e pare.
 
 5. Para cada CCT, chame o subagente `leitor-ccts` passando o id, a lista de informações e, se houver, as páginas onde os termos apareceram. Mande até 8 chamadas na mesma mensagem, para rodarem em paralelo, e espere o lote terminar antes do próximo.
 
-6. Escreva `saida/consulta.html` (substitui a consulta anterior) e responda no chat com: o pedido, quantas CCTs e arquivos foram analisados e um resumo do que foi encontrado.
+6. Grave as respostas em `saida/resultado.json`, no formato de `modelo.json` (nesta pasta), e rode `python .claude/skills/consulta/relatorio.py`. Ele monta `saida/consulta.html` (substitui a consulta anterior) com o visual do Robô Mediador. Se o script apontar um erro no JSON, corrija e rode de novo. Depois responda no chat com: o pedido, quantas CCTs e arquivos foram analisados e um resumo do que foi encontrado.
 
-## Como montar o HTML
-Use como modelo o arquivo `modelo.html` desta pasta (`.claude/skills/consulta/modelo.html`): mesmo CSS, mesma estrutura e o mesmo jeito de mostrar a fonte. Troque só os dados.
-- **Cabeçalho:** "Consulta de CCTs", o pedido, a data e os números (arquivos na pasta, CCTs analisadas, arquivos/lojas cobertos).
-- **Resumo por informação:** um cartão por informação com quantas CCTs têm, não têm ou têm em parte.
-- **Tabela:** uma linha por CCT e uma coluna por informação. Cada célula traz a resposta curta e, ao passar o mouse ou abrir, a cláusula e o trecho. "Não encontrado" e "parcial" ficam visíveis com cor própria.
-- **Detalhe por CCT:** lojas (arquivos), vigência, e para cada informação a resposta completa, a cláusula e o trecho.
-- **Alertas:** CCTs que tratam só de outro assunto, arquivos sem texto e dúvidas da leitura.
-- **Rodapé:** "Gerado automaticamente pelo agente de consulta de CCTs".
-- Arquivo único, CSS dentro de `<style>`, sem bibliotecas externas.
+## Como preencher o resultado.json
+Copie a estrutura de `modelo.json`. O programa busca sozinho o documento (registro no MTE), a vigência, os arquivos e as lojas de cada CCT; você escreve só o que a leitura achou.
+- `pedido`: o texto do usuário. `data`: dia da consulta (aaaa-mm-dd). `grupo`: como chamar as CCTs do filtro ("atrasadas", "vigentes"...). `filtro`: uma frase com o critério.
+- `infos`: uma por informação pedida. Em `foco`, diga em poucas palavras o que o agente procurou. Isso abre o relatório e deixa claro que a leitura foi focada, não geral.
+- `ccts`: uma por CCT lida. O `id` fica só no JSON. `nome` é a cidade; `curto` (opcional) é um nome menor para os gráficos.
+  - Cada informação tem `st` (`sim`, `parcial` ou `nao`), `curta` (resposta para a tabela, até ~60 caracteres), `pontos` (lista de itens curtos), `clausula`, `pag` e `trecho` (citação curta).
+  - `valor` (número) e `nota` (motivo, se o valor tem ressalva) só quando a informação entra num gráfico.
+  - CCT que trata só de outro assunto (horário, feriados, banco de horas): use `complementar` com `assunto`, `pontos` e `principal` (id da CCT principal das mesmas lojas) ou `principal_txt`. Em `infos`, só o que ela tiver das informações pedidas.
+- `graficos` (opcional): para informações com um número comparável entre CCTs (piso em R$, reajuste em %). Campos: `info`, `titulo`, `subtitulo`, `unidade` (`R$` ou `%`), `forma` (`barras` ou `colunas`). Os gráficos de "o que foi encontrado" e "lojas por estado" saem sempre.
+- `alertas`: os pontos de atenção, cada um com `nivel`, `titulo`, `pontos` e `ccts` (lista de ids):
+  - `alto`: falta documento ou dado, ou há dúvida que impede usar o resultado (ex.: aditivo fora da pasta, duas CCTs para a mesma loja).
+  - `medio`: o dado existe, mas o texto tem erro ou ambiguidade e precisa de conferência no PDF.
+  - `baixo`: detalhe para conhecimento, que não muda o resultado (ex.: erro de digitação que o extenso corrige).
+  - O mesmo problema em várias CCTs vira um alerta só, com todas elas em `ccts`.
+
+## Regras de escrita do relatório
+- Itens curtos, não parágrafos. Use uma frase inteira só quando ela for necessária para explicar o dado.
+- Não repita: o que virou ponto de atenção não volta em `obs` nem em `pontos`, a não ser o mínimo para explicar um "parcial". `obs` é só para o que não cabe em nenhuma informação e muda a leitura do dado.
+- Nunca escreva o id (o código entre colchetes) em nenhum texto. Para identificar a CCT, use a cidade e, se precisar, o registro no MTE (o `buscar` mostra).
+- Não traga o que não foi pedido (ex.: vale-alimentação numa consulta de piso).
+- Valores como no texto: R$ 1.234,56; 10%; dd/mm/aaaa.

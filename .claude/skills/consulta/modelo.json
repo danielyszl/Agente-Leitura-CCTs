@@ -1,0 +1,227 @@
+{
+ "pedido": "CCTs atrasadas: piso salarial, reajuste, quebra de caixa, horas extras e auxílio creche",
+ "data": "2026-11-11",
+ "grupo": "atrasadas",
+ "filtro": "Atrasada = a vigência terminou antes de 11/11/2026.",
+ "infos": [
+  {
+   "nome": "Piso salarial",
+   "foco": "valores de piso ou salário normativo, por função quando a CCT separa"
+  },
+  {
+   "nome": "Reajuste salarial",
+   "foco": "percentual na data-base, teto e regra para quem foi admitido depois"
+  },
+  {
+   "nome": "Quebra de caixa",
+   "foco": "adicional de quem trabalha no caixa: percentual e base de cálculo"
+  },
+  {
+   "nome": "Horas extras",
+   "foco": "percentuais e regras especiais (feriados, domingos, compensação)"
+  },
+  {
+   "nome": "Auxílio creche",
+   "foco": "auxílio ou reembolso creche, ou benefício parecido para filhos pequenos"
+  }
+ ],
+ "graficos": [
+  {
+   "info": "Piso salarial",
+   "titulo": "Piso geral de cada CCT",
+   "unidade": "R$",
+   "forma": "barras",
+   "subtitulo": "piso dos empregados em geral, do maior para o menor"
+  },
+  {
+   "info": "Reajuste salarial",
+   "titulo": "Reajuste salarial de cada CCT",
+   "unidade": "%",
+   "forma": "colunas",
+   "subtitulo": "percentual na data-base, do maior para o menor"
+  }
+ ],
+ "ccts": [
+  {
+   "id": "279e57db96",
+   "nome": "Concórdia",
+   "infos": {
+    "Piso salarial": {
+     "st": "sim",
+     "curta": "R$ 2.070,00 (único, inclusive comissionistas)",
+     "pontos": [
+      "Salário normativo único de R$ 2.070,00, inclusive comissionistas, para Alto Bela Vista, Arabutã, Concórdia, Ipira, Ipumirim, Irani, Itá, Jaborá, Lindóia do Sul, Peritiba, Piratuba e Presidente Castello Branco",
+      "Se o piso regional ficar acima dele, também será reajustado"
+     ],
+     "clausula": "CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO",
+     "pag": "1",
+     "trecho": "Fica estabelecido o salário normativo para a categoria profissional, inclusive aos comissionistas [...] - R$ 2.070,00 (dois mil e setenta reais).",
+     "valor": 2070.0
+    },
+    "Reajuste salarial": {
+     "st": "sim",
+     "curta": "6,20%",
+     "pontos": [
+      "6,20% sobre os salários de outubro/2025, compensando antecipações do período",
+      "Quem já tinha fechado a folha paga as diferenças com dezembro/2025",
+      "Admitidos depois de novembro/2024: proporcional, de 6,20% (nov/24) a 0,52% (out/25)",
+      "A CCT prevê renegociação de perdas a cada quatro meses (cl. 55ª)"
+     ],
+     "clausula": "CLÁUSULA QUARTA - REAJUSTE SALARIAL; CLÁUSULA QUINTA - PROPORCIONALIDADE",
+     "pag": "2-3",
+     "trecho": "serão reajustados pelo percentual de 6,20% (seis virgula vinte por cento), aplicados sobre os salários vigentes em outubro de 2025.",
+     "valor": 6.2
+    },
+    "Quebra de caixa": {
+     "st": "sim",
+     "curta": "30% do salário mínimo nacional",
+     "pontos": [
+      "30% sobre o salário mínimo nacional, todo mês, para quem exerce função de caixa ou cobrador",
+      "Proibido pagar proporcional",
+      "Não é devido a vendedores que cobram em caixas automatizados só com cartão",
+      "Conferência do caixa deve ser feita na presença do operador (cl. 8ª)"
+     ],
+     "clausula": "CLÁUSULA DÉCIMA SEGUNDA - QUEBRA DE CAIXA",
+     "pag": "4",
+     "trecho": "com percentual de 30% (trinta inteiros por cento) sobre o salário mínimo nacional, sendo vedado o pagamento de forma proporcional."
+    },
+    "Horas extras": {
+     "st": "sim",
+     "curta": "60% (adicional único)",
+     "pontos": [
+      "60% sobre a hora normal, sem faixa diferente para domingos e feriados",
+      "Comissionistas: base no salário normativo + 60%",
+      "Em balanços, base nas comissões do mês + 60%",
+      "Intervalo não concedido e cursos/reuniões fora do horário são pagos como extra",
+      "Hora extra em ambiente insalubre não pode ir para banco de horas"
+     ],
+     "clausula": "CLÁUSULA DÉCIMA TERCEIRA - HORA EXTRAORDINÁRIA (e cláusulas 28ª, 29ª, 32ª e 38ª)",
+     "pag": "5, 9-12",
+     "trecho": "A jornada extraordinária de trabalho será remunerada com o adicional de 60% (sessenta inteiros por cento) sobre o valor da hora normal de trabalho."
+    },
+    "Auxílio creche": {
+     "st": "parcial",
+     "curta": "Só auxílio mãe comerciária (10% do piso, filhos até 12 meses)",
+     "pontos": [
+      "Não há auxílio creche",
+      "Existe o auxílio mãe comerciária: 10% do salário normativo para mães com filhos de 0 a 12 meses, pago a partir do fim da licença-maternidade (na falta da mãe, ao pai ou responsável)",
+      "O texto não diz se é mensal"
+     ],
+     "clausula": "CLÁUSULA DÉCIMA QUINTA - AUXÍLIO MÃE COMERCIÁRIA",
+     "pag": "5-6",
+     "trecho": "um auxílio correspondente à 10% (dez inteiros por cento) do salário normativo da categoria, sendo pago a partir do término da licença maternidade."
+    }
+   }
+  },
+  {
+   "id": "baf872eb98",
+   "nome": "Concórdia",
+   "complementar": {
+    "assunto": "Banco de horas",
+    "principal": "279e57db96",
+    "pontos": [
+     "Banco de horas do comércio varejista de Concórdia e região: até 8 horas extras por mês e 32 por quadrimestre podem ser compensadas",
+     "O que passar da 8ª hora no mês é pago como extra no próprio mês, com o “adicional convencional” (o percentual está na CCT principal)",
+     "Aviso de 2 dias úteis, controle de ponto obrigatório",
+     "Setores insalubres ficam fora"
+    ]
+   },
+   "infos": {
+    "Horas extras": {
+     "st": "parcial",
+     "pontos": [
+      "Só no banco de horas: acima de 8 h/mês são pagas como extra no próprio mês, com o adicional da CCT principal (60%); não informa o percentual"
+     ]
+    }
+   }
+  },
+  {
+   "id": "f31c50934a",
+   "nome": "Nova Andradina",
+   "infos": {
+    "Piso salarial": {
+     "st": "sim",
+     "curta": "R$ 1.800,00 · operador de caixa R$ 1.833,00",
+     "pontos": [
+      "Valores a partir de 01/11/2025",
+      "Geral: R$ 1.800,00 (ressalvada jornada reduzida)",
+      "Operador de caixa: R$ 1.833,00",
+      "Salário misto: o fixo não pode ser menor que o piso"
+     ],
+     "clausula": "CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO DA CATEGORIA",
+     "pag": "1-2",
+     "trecho": "o piso salarial para os operadores de caixa será de R$ 1.833,00",
+     "valor": 1800.0
+    },
+    "Reajuste salarial": {
+     "st": "parcial",
+     "curta": "7% (o extenso diz “nove e meio”)",
+     "pontos": [
+      "7% em 01/11/2025 sobre os salários de 31/10/2025, compensando antecipações (exceto promoção, equiparação e aprendizagem)",
+      "O texto diz “7% (nove e meio por cento)”: número e extenso não batem"
+     ],
+     "clausula": "CLÁUSULA QUARTA - REAJUSTE SALARIAL",
+     "pag": "2",
+     "trecho": "terão reposição salarial em 01/11/2025, data-base da categoria, em 7% (nove e meio por cento), índice este aplicado sobre os salários vigentes em 31/10/2025.",
+     "valor": 7.0,
+     "nota": "No texto: “7% (nove e meio por cento)”; número e extenso não batem"
+    },
+    "Quebra de caixa": {
+     "st": "sim",
+     "curta": "10% do piso",
+     "pontos": [
+      "Gratificação de 10% sobre o piso da categoria para caixa ou assemelhado, com reflexo em 13º, férias e rescisão"
+     ],
+     "clausula": "CLÁUSULA DÉCIMA - QUEBRA DE CAIXA",
+     "pag": "4",
+     "trecho": "terão gratificação de 10% (dez por cento), calculado sobre o piso da categoria, a título de quebra de caixa"
+    },
+    "Horas extras": {
+     "st": "sim",
+     "curta": "60% · 100% em feriados e repouso",
+     "pontos": [
+      "60% na jornada semanal",
+      "Horas em feriados e no repouso, não compensadas: 100%",
+      "Horas extras habituais integram a remuneração",
+      "Sábado após 14h e horário de Natal: 60% ou folga em 30 dias",
+      "Feriados permitidos: R$ 130,00 sem folga ou R$ 80,00 + folga",
+      "Banco de horas só com acordo coletivo"
+     ],
+     "clausula": "CLÁUSULA TRIGÉSIMA SEGUNDA - HORAS EXTRAORDINÁRIAS (e cláusulas 15ª, 30ª, 35ª e 39ª)",
+     "pag": "5-6, 10-15",
+     "trecho": "Quando prestadas na jornada semanal, as horas suplementares serão remuneradas com o adicional de 60% (sessenta por cento) sobre o valor da hora normal."
+    },
+    "Auxílio creche": {
+     "st": "nao",
+     "curta": "",
+     "pontos": [
+      "A CCT não trata de auxílio creche nem de benefício parecido"
+     ]
+    }
+   }
+  }
+ ],
+ "alertas": [
+  {
+   "nivel": "medio",
+   "titulo": "Número e extenso não batem",
+   "ccts": [
+    "f31c50934a"
+   ],
+   "pontos": [
+    "Reajuste: “7% (nove e meio por cento)”.",
+    "Prêmio de feriado: “R$ 130,00 (cento e cinquenta reais)”."
+   ]
+  },
+  {
+   "nivel": "baixo",
+   "titulo": "Auxílio mãe comerciária aparece como creche no Mediador",
+   "ccts": [
+    "279e57db96"
+   ],
+   "pontos": [
+    "O Mediador põe a cláusula no grupo “Auxílio Creche”, mas ela não fala em creche. Foi marcada como Parcial."
+   ]
+  }
+ ]
+}

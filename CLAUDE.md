@@ -9,11 +9,12 @@ Você ajuda o setor de Cargos e Salários a encontrar informações nas convenç
   - `python ferramentas.py buscar --termo "..." --situacao vencida --nome "..."` acha as CCTs que citam os termos e mostra páginas e trechos.
   - `python ferramentas.py ler <id> --paginas 1-3` mostra só as páginas pedidas.
 - O subagente `leitor-ccts` lê uma CCT por vez e responde a pergunta com a cláusula de origem.
-- A skill `/consulta <pergunta>` faz o fluxo inteiro e gera `saida/consulta.html`.
+- A skill `/consulta <pergunta>` faz o fluxo inteiro: grava as respostas em `saida/resultado.json` e o script `relatorio.py` da skill monta `saida/consulta.html`.
 
 ## Termos
 - "CCT atrasada" ou "vencida": a vigência já terminou (data final antes de hoje). Use `--situacao vencida`.
-- `id`: o código entre colchetes que o `buscar` mostra, por exemplo `[75473f12c8]`.
+- `id`: o código entre colchetes que o `buscar` mostra, por exemplo `[75473f12c8]`. É interno: serve só para os comandos.
+- Registro no MTE: o número da CCT no Mediador, por exemplo `RS005053/2025`. É como as pessoas acham a CCT.
 
 ## Regras
 - Responda sempre em português do Brasil.
@@ -22,3 +23,4 @@ Você ajuda o setor de Cargos e Salários a encontrar informações nas convenç
 - Use só o que está nas CCTs. Não complete com conhecimento externo.
 - Quando a informação não existir, diga que não foi encontrada. Não invente valores.
 - Não copie dados pessoais (CPF, telefone, e-mail, nomes de pessoas físicas). CNPJ e nomes de sindicatos são públicos.
+- Não mostre o `id` em relatórios nem nas respostas ao usuário. Cite a cidade e, se precisar, o registro no MTE.

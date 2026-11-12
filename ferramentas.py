@@ -55,6 +55,8 @@ RE_PAGINA = re.compile(r"^=== PÁGINA (\d+) ===$", re.M)
 # Só letras no rótulo: "CLÁUSULA 04 - ..." no meio do texto é citação, não cláusula nova.
 RE_CLAUSULA = re.compile(r"^[ \t]*(CL[ÁA]USULA[ \t]+[A-ZÀ-Ú \t]{2,60}?)[ \t]+-[ \t]+(.+?)[ \t]*$", re.M)
 RE_CONTROLE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f￾￿]")
+# Topo da 1ª página: "NÚMERO DE REGISTRO NO MTE: RS005053/2025" (é como a CCT é achada no Mediador)
+RE_REGISTRO = re.compile(r"REGISTRO NO MTE:\s*([A-Z]{2}\d{6}/\d{4})")
 
 
 # ------------------------------------------------------------------ utilidades
@@ -118,6 +120,13 @@ def _carregar_indice() -> dict:
 
 def _caminho_texto(cct_id: str) -> str:
     return os.path.join(PASTA_TEXTOS, f"{cct_id}.txt")
+
+
+def _registro(cct_id: str) -> str:
+    """Número de registro no MTE (ex.: RS005053/2025); '' se não estiver no topo do texto."""
+    with open(_caminho_texto(cct_id), encoding="utf-8") as f:
+        m = RE_REGISTRO.search(f.read(3000))
+    return m.group(1) if m else ""
 
 
 def _ler_paginas(cct_id: str) -> list[str]:
@@ -294,8 +303,8 @@ def buscar(args) -> int:
           f"(de {len(grupos)} CCTs que passaram nos filtros)")
     for cct_id, arquivos, paginas_com_termo, trechos in achados[:args.limite]:
         cct = indice["ccts"][cct_id]
-        print(f"\n[{cct_id}] {_situacao(cct).upper()} | vigência {_br(cct['vigencia_inicio'])} a "
-              f"{_br(cct['vigencia_fim'])} | {cct['paginas']} págs | {cct['tipo']}")
+        print(f"\n[{cct_id}] {_situacao(cct).upper()} | registro MTE {_registro(cct_id) or '?'} | vigência "
+              f"{_br(cct['vigencia_inicio'])} a {_br(cct['vigencia_fim'])} | {cct['paginas']} págs | {cct['tipo']}")
         print(f"  arquivos ({len(arquivos)}): {'; '.join(sorted(arquivos))}")
         if paginas_com_termo:
             print(f"  termos nas páginas: {', '.join(map(str, paginas_com_termo))}")
@@ -349,8 +358,9 @@ def ler(args) -> int:
 
     cct = indice["ccts"][cct_id]
     arquivos = sorted(a["arquivo"] for a in indice["arquivos"].values() if a["id"] == cct_id)
-    print(f"CCT [{cct_id}] {_situacao(cct).upper()} | vigência {_br(cct['vigencia_inicio'])} a "
-          f"{_br(cct['vigencia_fim'])} | data-base {cct['data_base'] or '?'} | {len(paginas)} págs")
+    print(f"CCT [{cct_id}] {_situacao(cct).upper()} | registro MTE {_registro(cct_id) or '?'} | vigência "
+          f"{_br(cct['vigencia_inicio'])} a {_br(cct['vigencia_fim'])} | data-base {cct['data_base'] or '?'} | "
+          f"{len(paginas)} págs")
     print(f"Arquivos ({len(arquivos)}): {'; '.join(arquivos)}")
     print(f"Texto completo: {os.path.relpath(_caminho_texto(cct_id), AQUI)}\n")
 

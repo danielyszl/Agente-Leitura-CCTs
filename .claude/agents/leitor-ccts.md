@@ -35,8 +35,10 @@ Responda só com este bloco, repetindo a parte INFORMAÇÃO para cada informaç�
 CCT: <id>
 INFORMAÇÃO: <nome da informação, como no pedido>
 RESPONDE: sim | não | parcial
-RESPOSTA: <a informação, objetiva e completa>
+RESPOSTA:
+- <um item curto por valor ou condição, ex.: "Salário fixo: R$ 1.910,00">
+- <outro item>
 CLÁUSULA: <rótulo e título da cláusula, como aparecem no texto>
 TRECHO: "<citação curta que comprova a resposta>"
 PÁGINAS LIDAS: <ex.: 2, 5-6>
-OBSERVAÇÕES: <o que chamou atenção, ou "nenhuma">
+OBSERVAÇÕES: <só o que não está na RESPOSTA e merece conferência (erro no texto, dúvida, documento citado que falta), ou "nenhuma">
