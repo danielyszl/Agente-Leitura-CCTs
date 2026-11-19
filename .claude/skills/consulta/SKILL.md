@@ -30,7 +30,7 @@ Se o pedido for "diária" (ou "diaria"), siga também a seção **Consulta diár
 
 ## Consulta diária
 Consulta fixa do setor de Cargos e Salários, para rodar todo dia numa tarefa agendada, sem ninguém acompanhando. Não faça perguntas.
-- **Filtro:** no passo 3, rode `python ferramentas.py buscar --novas`. Ele lista só as CCTs que ainda não saíram num relatório diário, as mais recentes primeiro, até o `limite_diario` do `config.json`. Analise todas as listadas, principais e complementares, sem refinar.
+- **Filtro:** no passo 3, rode `python ferramentas.py buscar --novas`. Ele lista só as CCTs que ainda não saíram num relatório diário, as mais recentes primeiro, até o `LimiteDiario` do `config.ini` (fora do projeto). Analise todas as listadas, principais e complementares, sem refinar.
 - **Nenhuma CCT na fila:** rode `python .claude/skills/consulta/enviar_email.py --sem-novas` (aviso curto de que o agente rodou) e pare.
 - **Informações:** as 9 da lista abaixo, nesta ordem, com o `nome` e o `foco` de `modelo.json`.
 - **resultado.json:** `"diaria": true`, `pedido` "Consulta diária: CCTs novas", `grupo` "novas" e `filtro` "Nova: convenção coletiva que ainda não tinha sido analisada pelo agente. Até N por dia, as mais recentes primeiro." (N é o limite que o `buscar` mostrou).

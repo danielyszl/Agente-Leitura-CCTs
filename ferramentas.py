@@ -7,7 +7,7 @@ procurar e ler só o que interessa, sem abrir os 600 arquivos.
 Comandos (rodar na pasta do projeto):
 
     python ferramentas.py extrair
-        Lê os PDFs da pasta do config.json e guarda o texto em saida/textos/.
+        Lê os PDFs da pasta do config.ini (PastaCCTs) e guarda o texto em saida/textos/.
         Arquivos que não mudaram desde a última vez não são lidos de novo.
 
     python ferramentas.py buscar --termo "auxilio creche" --termo "creche" --situacao vencida
@@ -17,7 +17,7 @@ Comandos (rodar na pasta do projeto):
           --nome "SANTA ROSA"  só arquivos com esse pedaço no nome (loja, cidade, SINDxxxx)
           --situacao           vigente | vencida | futura | sem_vigencia
           --novas              só as CCTs ainda não analisadas (consulta diária), as mais
-                               recentes primeiro, até o limite_diario do config.json
+                               recentes primeiro, até o LimiteDiario do config.ini
         Sem --termo, só lista as CCTs que passam nos filtros.
 
     python ferramentas.py marcar
@@ -35,6 +35,7 @@ Comandos (rodar na pasta do projeto):
         Mostra só as cláusulas cujo título tem algum desses termos.
 """
 import argparse
+import configparser
 import hashlib
 import json
 import os
@@ -51,7 +52,11 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 PASTA_TEXTOS = os.path.join(AQUI, "saida", "textos")
 INDICE = os.path.join(AQUI, "saida", "indice.json")
 ANALISADAS = os.path.join(AQUI, "saida", "analisadas.json")  # CCTs que já saíram num relatório diário
-LIMITE_DIARIO = 10  # se o config.json não tiver "limite_diario"
+LIMITE_DIARIO = 10  # se o config.ini não tiver LimiteDiario
+# configuração fora do projeto (não vai para o git), no mesmo arquivo do e-mail, como nos robôs
+CONFIG_INI = os.path.join(os.path.expanduser("~"), ".AgenteLeituraCCTs", "config.ini")
+MODELO_INI = ("[Pastas]\nPastaCCTs = \n\n[Consulta]\nLimiteDiario = 10\n\n"
+              "[Email]\nEmailRemetente = \nSenhaApp = \nEmailDestinatario = \n")
 
 MESES = {"janeiro": 1, "fevereiro": 2, "marco": 3, "abril": 4, "maio": 5, "junho": 6,
          "julho": 7, "agosto": 8, "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12}
@@ -119,9 +124,15 @@ def _situacao(cct: dict) -> str:
     return "vigente" if hoje <= fim else "vencida"
 
 
-def _config() -> dict:
-    with open(os.path.join(AQUI, "config.json"), encoding="utf-8") as f:
-        return json.load(f)
+def _config() -> configparser.ConfigParser:
+    config = configparser.ConfigParser(interpolation=None)  # sem interpolação: um % no caminho não quebra
+    config.read(CONFIG_INI, encoding="utf-8")
+    return config
+
+
+def _pasta_ccts() -> str:
+    """Pasta dos PDFs: PastaCCTs na seção [Pastas] do config.ini. Vazia se não estiver preenchida."""
+    return _config().get("Pastas", "PastaCCTs", fallback="").strip().strip('"')
 
 
 def _carregar_indice() -> dict:
@@ -230,9 +241,16 @@ def _dados_cct(paginas: list[str]) -> dict:
 
 
 def extrair(args) -> int:
-    pasta = _config()["pasta_ccts"]
+    pasta = _pasta_ccts()
+    if not pasta:
+        if not os.path.exists(CONFIG_INI):  # primeira vez neste computador: cria o config.ini para preencher
+            os.makedirs(os.path.dirname(CONFIG_INI), exist_ok=True)
+            with open(CONFIG_INI, "w", encoding="utf-8") as f:
+                f.write(MODELO_INI)
+        print(f"Falta a pasta das CCTs: preencha PastaCCTs na seção [Pastas] de {CONFIG_INI}")
+        return 1
     if not os.path.isdir(pasta):
-        print(f"Pasta não encontrada: {pasta} (confira o config.json)")
+        print(f"Pasta não encontrada: {pasta} (confira PastaCCTs em {CONFIG_INI})")
         return 1
 
     indice = _carregar_indice()
@@ -346,14 +364,14 @@ def buscar(args) -> int:
             achados.append((cct_id, arquivos, paginas_com_termo, trechos))
 
     if args.novas:
-        # a fila anda das CCTs mais recentes para as mais antigas, no máximo limite_diario por dia
-        limite = int(_config().get("limite_diario", LIMITE_DIARIO))
+        # a fila anda das CCTs mais recentes para as mais antigas, no máximo LimiteDiario por dia
+        limite = _config().getint("Consulta", "LimiteDiario", fallback=LIMITE_DIARIO)
         fila = len(achados)
         achados.sort(key=lambda a: (indice["ccts"][a[0]]["vigencia_inicio"], min(a[1])), reverse=True)
         achados = achados[:limite]
         resto = fila - len(achados)
         print(f"Fila da consulta diária: {fila} CCT(s) ainda não analisada(s); hoje entram as {len(achados)} "
-              f"mais recentes (limite_diario = {limite} no config.json)"
+              f"mais recentes (LimiteDiario = {limite} no config.ini)"
               f"{f'; ficam {resto} para os próximos dias' if resto else ''}.")
     else:
         achados.sort(key=lambda a: min(a[1]))
@@ -477,7 +495,7 @@ def main() -> int:
     b.add_argument("--situacao", choices=["vigente", "vencida", "futura", "sem_vigencia"])
     b.add_argument("--trechos", type=int, default=3, help="trechos mostrados por CCT (padrão 3)")
     b.add_argument("--limite", type=int, default=30, help="máximo de CCTs mostradas (padrão 30)")
-    b.add_argument("--novas", action="store_true", help="só CCTs ainda não analisadas, até o limite_diario")
+    b.add_argument("--novas", action="store_true", help="só CCTs ainda não analisadas, até o LimiteDiario do config.ini")
 
     l = comandos.add_parser("ler", help="mostra o texto de uma CCT")
     l.add_argument("id", help="id da CCT (mostrado pelo buscar) ou parte do nome do arquivo")
