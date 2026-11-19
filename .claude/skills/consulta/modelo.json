@@ -1,16 +1,37 @@
 {
- "pedido": "CCTs atrasadas: piso salarial, reajuste, quebra de caixa, horas extras e auxílio creche",
- "data": "2026-11-11",
- "grupo": "atrasadas",
- "filtro": "Atrasada = a vigência terminou antes de 11/11/2026.",
+ "pedido": "Consulta diária: CCTs novas",
+ "data": "2026-11-19",
+ "diaria": true,
+ "grupo": "novas",
+ "filtro": "Nova: convenção coletiva que ainda não tinha sido analisada pelo agente. Até 10 por dia, as mais recentes primeiro.",
  "infos": [
   {
-   "nome": "Piso salarial",
-   "foco": "valores de piso ou salário normativo, por função quando a CCT separa"
+   "nome": "Pisos salariais",
+   "foco": "todos os pisos, função por função (geral, comissionista, caixa, limpeza, administrativo, estoque...), com a data de início"
   },
   {
-   "nome": "Reajuste salarial",
-   "foco": "percentual na data-base, teto e regra para quem foi admitido depois"
+   "nome": "Reajustes",
+   "foco": "todos os reajustes previstos, com data e percentual, inclusive escalonados, teto e regra para admitidos depois"
+  },
+  {
+   "nome": "Retroatividade",
+   "foco": "se pisos e reajustes valem desde uma data anterior e como pagar as diferenças"
+  },
+  {
+   "nome": "Salário mínimo ou piso regional",
+   "foco": "se o piso ou o reajuste segue o salário mínimo nacional ou o piso regional do estado"
+  },
+  {
+   "nome": "Jovem aprendiz",
+   "foco": "salário do aprendiz: valor, percentual do piso ou salário mínimo/hora"
+  },
+  {
+   "nome": "ATS",
+   "foco": "adicional por tempo de serviço (anuênio, triênio, quinquênio): percentual, período e limite"
+  },
+  {
+   "nome": "Feriados e domingos",
+   "foco": "se pode trabalhar, como paga (adicional ou valor fixo), folga e escala"
   },
   {
    "nome": "Quebra de caixa",
@@ -18,119 +39,156 @@
   },
   {
    "nome": "Horas extras",
-   "foco": "percentuais e regras especiais (feriados, domingos, compensação)"
-  },
-  {
-   "nome": "Auxílio creche",
-   "foco": "auxílio ou reembolso creche, ou benefício parecido para filhos pequenos"
-  }
- ],
- "graficos": [
-  {
-   "info": "Piso salarial",
-   "titulo": "Piso geral de cada CCT",
-   "unidade": "R$",
-   "forma": "barras",
-   "subtitulo": "piso dos empregados em geral, do maior para o menor"
-  },
-  {
-   "info": "Reajuste salarial",
-   "titulo": "Reajuste salarial de cada CCT",
-   "unidade": "%",
-   "forma": "colunas",
-   "subtitulo": "percentual na data-base, do maior para o menor"
+   "foco": "percentuais e regras especiais (compensação, banco de horas)"
   }
  ],
  "ccts": [
   {
-   "id": "279e57db96",
-   "nome": "Concórdia",
+   "id": "821cb168c4",
+   "nome": "Novo Hamburgo",
    "infos": {
-    "Piso salarial": {
+    "Pisos salariais": {
      "st": "sim",
-     "curta": "R$ 2.070,00 (único, inclusive comissionistas)",
-     "pontos": [
-      "Salário normativo único de R$ 2.070,00, inclusive comissionistas, para Alto Bela Vista, Arabutã, Concórdia, Ipira, Ipumirim, Irani, Itá, Jaborá, Lindóia do Sul, Peritiba, Piratuba e Presidente Castello Branco",
-      "Se o piso regional ficar acima dele, também será reajustado"
+     "curta": "R$ 1.880,00 a R$ 2.070,00 · 4 pisos",
+     "pisos": [
+      {
+       "funcao": "Comissionista (salário misto ou só comissões)",
+       "valor": "R$ 2.070,00,00",
+       "desde": "01/10/2025",
+       "nota": "No texto, “,00” aparece repetido; o extenso confirma R$ 2.070,00"
+      },
+      {
+       "funcao": "Salário fixo",
+       "valor": "R$ 1.910,00",
+       "desde": "01/10/2025"
+      },
+      {
+       "funcao": "Limpeza / boy",
+       "valor": "R$ 1.910,00",
+       "desde": "01/10/2025"
+      },
+      {
+       "funcao": "Sem experiência no comércio varejista (primeiros 60 dias)",
+       "valor": "R$ 1.880,00",
+       "desde": "01/10/2025"
+      }
      ],
-     "clausula": "CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO",
-     "pag": "1",
-     "trecho": "Fica estabelecido o salário normativo para a categoria profissional, inclusive aos comissionistas [...] - R$ 2.070,00 (dois mil e setenta reais).",
-     "valor": 2070.0
+     "pontos": [
+      "Os pisos de outubro/2025 serão a base de cálculo na próxima convenção"
+     ],
+     "clausula": "CLÁUSULA TERCEIRA - SALÁRIO MÍNIMO PROFISSIONAL",
+     "pag": "1-2",
+     "trecho": "b) Empregados que percebem salário fixo: R$ 1.910,00 (um mil, novecentos e dez reais );"
     },
-    "Reajuste salarial": {
+    "Reajustes": {
      "st": "sim",
-     "curta": "6,20%",
+     "curta": "6,10% em 01/10/2025 · proporcional para admitidos depois",
      "pontos": [
-      "6,20% sobre os salários de outubro/2025, compensando antecipações do período",
-      "Quem já tinha fechado a folha paga as diferenças com dezembro/2025",
-      "Admitidos depois de novembro/2024: proporcional, de 6,20% (nov/24) a 0,52% (out/25)",
-      "A CCT prevê renegociação de perdas a cada quatro meses (cl. 55ª)"
+      "6,10% em 01/10/2025, sobre o salário de outubro/2024",
+      "Vale até a parcela de R$ 8.290,28; acima disso, livre negociação",
+      "Admitidos depois da data-base: tabela proporcional de 6,10% (out/24) a 0,60% (set/25)",
+      "Compensa aumentos do período, exceto aprendizagem, idade, promoção, transferência e equiparação"
      ],
-     "clausula": "CLÁUSULA QUARTA - REAJUSTE SALARIAL; CLÁUSULA QUINTA - PROPORCIONALIDADE",
+     "clausula": "CLÁUSULA QUARTA - REAJUSTE SALARIAL; CLÁUSULA QUINTA - REAJUSTE SALARIAL PROPORCIONAL",
      "pag": "2-3",
-     "trecho": "serão reajustados pelo percentual de 6,20% (seis virgula vinte por cento), aplicados sobre os salários vigentes em outubro de 2025.",
-     "valor": 6.2
+     "trecho": "serão reajustados no percentual de 6,10% (seis inteiros e um décimo), a incidir sobre o salário de outubro de 2024"
+    },
+    "Retroatividade": {
+     "st": "sim",
+     "curta": "Sim: diferença de outubro/2025 paga com a folha de novembro/2025",
+     "pontos": [
+      "Pisos e reajuste valem desde 01/10/2025",
+      "A diferença de outubro/2025 é paga junto com a folha de novembro/2025"
+     ],
+     "clausula": "CLÁUSULA SEXTA - DIFERENÇAS SALARIAIS",
+     "pag": "3",
+     "trecho": "A diferença do mês de outubro/ 2025 deverá ser paga junto com a folha do mês de novembro/2025."
+    },
+    "Salário mínimo ou piso regional": {
+     "st": "nao",
+     "curta": "pisos próprios, sem vínculo",
+     "pontos": [
+      "Os pisos são valores próprios da CCT; não há regra ligando piso ou reajuste ao salário mínimo nacional ou ao piso regional",
+      "O salário mínimo nacional aparece só como teto do quinquênio"
+     ]
+    },
+    "Jovem aprendiz": {
+     "st": "nao",
+     "curta": "",
+     "pontos": [
+      "A CCT não traz salário do aprendiz; fala só de estagiários (até 10% do quadro)"
+     ]
+    },
+    "ATS": {
+     "st": "sim",
+     "curta": "Teto de 1,5 salário mínimo nacional",
+     "valor": 3.0,
+     "periodo": "quinquênio",
+     "pontos": [
+      "3% a cada 5 anos de trabalho efetivo no mesmo empregador",
+      "Incide sobre o salário com parte fixa e comissões",
+      "Teto: 1,5 salário mínimo nacional; pode compensar ATS já pago pela empresa"
+     ],
+     "clausula": "CLÁUSULA VIGÉSIMA - QUINQUÊNIO",
+     "pag": "6",
+     "trecho": "Fica assegurada a concessão de um adicional de 3% (três por cento) a cada 05 (cinco) anos de trabalho efetivo para o mesmo empregador"
+    },
+    "Feriados e domingos": {
+     "st": "parcial",
+     "curta": "Regras pontuais aqui; domingos e feriados na CCT de horário",
+     "pontos": [
+      "Feriado em sábado compensado: horas pagas com 100%, ou folga equivalente em outra data",
+      "Proibido fazer balanço ou inventário em domingos e feriados",
+      "24 e 31/12/2025: lojas abertas até 18h",
+      "As regras de trabalho em domingos e feriados estão na CCT complementar de Novo Hamburgo"
+     ],
+     "clausula": "CLÁUSULA DÉCIMA QUARTA - COMPENSAÇÃO DE FERIADOS QUE OCORRAM NOS SÁBADOS (e cláusulas 37ª e 46ª)",
+     "pag": "5, 12, 14",
+     "trecho": "as horas compensadas serão pagas com adicional de 100% conforme o previsto nesta CCT."
     },
     "Quebra de caixa": {
      "st": "sim",
-     "curta": "30% do salário mínimo nacional",
+     "curta": "15% do salário · 12% para admitidos desde 01/01/2003",
      "pontos": [
-      "30% sobre o salário mínimo nacional, todo mês, para quem exerce função de caixa ou cobrador",
-      "Proibido pagar proporcional",
-      "Não é devido a vendedores que cobram em caixas automatizados só com cartão",
-      "Conferência do caixa deve ser feita na presença do operador (cl. 8ª)"
+      "Só para quem é exclusivamente caixa ou cobrador",
+      "15% do salário efetivamente recebido",
+      "Admitidos a partir de 01/01/2003: 12%"
      ],
-     "clausula": "CLÁUSULA DÉCIMA SEGUNDA - QUEBRA DE CAIXA",
-     "pag": "4",
-     "trecho": "com percentual de 30% (trinta inteiros por cento) sobre o salário mínimo nacional, sendo vedado o pagamento de forma proporcional."
+     "clausula": "CLÁUSULA VIGÉSIMA PRIMEIRA - QUEBRA DE CAIXA",
+     "pag": "6",
+     "trecho": "perceberão um adicional no valor de 15% (quinze por cento) do salário efetivamente percebido, a título de quebra de caixa."
     },
     "Horas extras": {
      "st": "sim",
-     "curta": "60% (adicional único)",
+     "curta": "50% nas 2 primeiras · 70% nas seguintes",
      "pontos": [
-      "60% sobre a hora normal, sem faixa diferente para domingos e feriados",
-      "Comissionistas: base no salário normativo + 60%",
-      "Em balanços, base nas comissões do mês + 60%",
-      "Intervalo não concedido e cursos/reuniões fora do horário são pagos como extra",
-      "Hora extra em ambiente insalubre não pode ir para banco de horas"
+      "50% nas 2 primeiras horas e 70% nas seguintes",
+      "Conferência de caixa depois da jornada e cursos fora do horário contam como extra"
      ],
-     "clausula": "CLÁUSULA DÉCIMA TERCEIRA - HORA EXTRAORDINÁRIA (e cláusulas 28ª, 29ª, 32ª e 38ª)",
-     "pag": "5, 9-12",
-     "trecho": "A jornada extraordinária de trabalho será remunerada com o adicional de 60% (sessenta inteiros por cento) sobre o valor da hora normal de trabalho."
-    },
-    "Auxílio creche": {
-     "st": "parcial",
-     "curta": "Só auxílio mãe comerciária (10% do piso, filhos até 12 meses)",
-     "pontos": [
-      "Não há auxílio creche",
-      "Existe o auxílio mãe comerciária: 10% do salário normativo para mães com filhos de 0 a 12 meses, pago a partir do fim da licença-maternidade (na falta da mãe, ao pai ou responsável)",
-      "O texto não diz se é mensal"
-     ],
-     "clausula": "CLÁUSULA DÉCIMA QUINTA - AUXÍLIO MÃE COMERCIÁRIA",
-     "pag": "5-6",
-     "trecho": "um auxílio correspondente à 10% (dez inteiros por cento) do salário normativo da categoria, sendo pago a partir do término da licença maternidade."
+     "clausula": "CLÁUSULA DÉCIMA SÉTIMA - ADICIONAL DE HORAS EXTRAS",
+     "pag": "5",
+     "trecho": "com os adicionais de 50% (cinqüenta por cento) para as 02 (duas) primeiras horas e 70% (setenta por cento) para as subseqüentes."
     }
    }
   },
   {
-   "id": "baf872eb98",
-   "nome": "Concórdia",
+   "id": "511962cf10",
+   "nome": "Novo Hamburgo",
    "complementar": {
-    "assunto": "Banco de horas",
-    "principal": "279e57db96",
+    "assunto": "Feriados e domingos",
+    "principal": "821cb168c4",
     "pontos": [
-     "Banco de horas do comércio varejista de Concórdia e região: até 8 horas extras por mês e 32 por quadrimestre podem ser compensadas",
-     "O que passar da 8ª hora no mês é pago como extra no próprio mês, com o “adicional convencional” (o percentual está na CCT principal)",
-     "Aviso de 2 dias úteis, controle de ponto obrigatório",
-     "Setores insalubres ficam fora"
+     "Proibido trabalhar com empregados em 01/01, 01/05, Sexta-Feira Santa e 25/12",
+     "Domingos: escala dois por um (a cada dois domingos trabalhados, um de folga)",
+     "Feriados: até 6 horas; a prorrogação de até 2 horas é extra com 100%",
+     "Para abrir em feriado, a empresa precisa do certificado do sindicato patronal e avisar o sindicato laboral 10 dias úteis antes"
     ]
    },
    "infos": {
-    "Horas extras": {
-     "st": "parcial",
+    "Feriados e domingos": {
+     "st": "sim",
      "pontos": [
-      "Só no banco de horas: acima de 8 h/mês são pagas como extra no próprio mês, com o adicional da CCT principal (60%); não informa o percentual"
+      "Feriado trabalhado: folga na semana anterior ou posterior; associados ao sindicato laboral também recebem prêmio de R$ 113,00"
      ]
     }
    }
@@ -139,38 +197,97 @@
    "id": "f31c50934a",
    "nome": "Nova Andradina",
    "infos": {
-    "Piso salarial": {
+    "Pisos salariais": {
      "st": "sim",
-     "curta": "R$ 1.800,00 · operador de caixa R$ 1.833,00",
+     "curta": "Geral R$ 1.800,00 · caixa R$ 1.833,00",
+     "pisos": [
+      {
+       "funcao": "Geral (empregados abrangidos)",
+       "valor": "R$ 1.800,00",
+       "desde": "01/11/2025",
+       "nota": "Não vale para jornada reduzida"
+      },
+      {
+       "funcao": "Comissionista (salário misto)",
+       "valor": "R$ 1.800,00",
+       "desde": "01/11/2025",
+       "nota": "É o mínimo da parte fixa"
+      },
+      {
+       "funcao": "Operador de caixa",
+       "valor": "R$ 1.833,00",
+       "desde": "01/11/2025"
+      }
+     ],
      "pontos": [
-      "Valores a partir de 01/11/2025",
-      "Geral: R$ 1.800,00 (ressalvada jornada reduzida)",
-      "Operador de caixa: R$ 1.833,00",
-      "Salário misto: o fixo não pode ser menor que o piso"
+      "Não há piso próprio para limpeza, administrativo, estoque, office boy ou sem experiência"
      ],
      "clausula": "CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO DA CATEGORIA",
      "pag": "1-2",
-     "trecho": "o piso salarial para os operadores de caixa será de R$ 1.833,00",
-     "valor": 1800.0
+     "trecho": "A partir de 01/11/2025 o piso salarial dos empregados abrangidos por este instrumento será de R$ 1.800,00 (um mil e oitocentos reais), ressalvados os casos de jornada reduzida."
     },
-    "Reajuste salarial": {
+    "Reajustes": {
      "st": "parcial",
-     "curta": "7% (o extenso diz “nove e meio”)",
+     "curta": "“7% (nove e meio por cento)” · número e extenso não batem",
      "pontos": [
-      "7% em 01/11/2025 sobre os salários de 31/10/2025, compensando antecipações (exceto promoção, equiparação e aprendizagem)",
-      "O texto diz “7% (nove e meio por cento)”: número e extenso não batem"
+      "01/11/2025, sobre os salários de 31/10/2025",
+      "Texto: “7% (nove e meio por cento)”; número e extenso não batem",
+      "Compensa antecipações, exceto promoção, equiparação e fim de aprendizagem",
+      "Sem teto e sem regra para admitidos depois da data-base"
      ],
      "clausula": "CLÁUSULA QUARTA - REAJUSTE SALARIAL",
      "pag": "2",
-     "trecho": "terão reposição salarial em 01/11/2025, data-base da categoria, em 7% (nove e meio por cento), índice este aplicado sobre os salários vigentes em 31/10/2025.",
-     "valor": 7.0,
-     "nota": "No texto: “7% (nove e meio por cento)”; número e extenso não batem"
+     "trecho": "terão reposição salarial em 01/11/2025, data-base da categoria, em 7% (nove e meio por cento), índice este aplicado sobre os salários vigentes em 31/10/2025."
+    },
+    "Retroatividade": {
+     "st": "parcial",
+     "curta": "Vale desde 01/11/2025; sem regra para as diferenças",
+     "pontos": [
+      "Pisos e reajuste valem a partir de 01/11/2025",
+      "A CCT só foi registrada no MTE em 14/04/2026",
+      "Não diz como nem quando pagar as diferenças"
+     ],
+     "clausula": "CLÁUSULA TERCEIRA - SALÁRIO NORMATIVO DA CATEGORIA; CLÁUSULA QUARTA - REAJUSTE SALARIAL",
+     "pag": "1-2",
+     "trecho": "A partir de 01/11/2025 o piso salarial dos empregados abrangidos por este instrumento será de R$ 1.800,00"
+    },
+    "Salário mínimo ou piso regional": {
+     "st": "nao",
+     "curta": "pisos próprios, sem vínculo",
+     "pontos": []
+    },
+    "Jovem aprendiz": {
+     "st": "nao",
+     "curta": "",
+     "pontos": [
+      "Só cita o fim da aprendizagem, na compensação do reajuste"
+     ]
+    },
+    "ATS": {
+     "st": "nao",
+     "curta": "",
+     "pontos": []
+    },
+    "Feriados e domingos": {
+     "st": "parcial",
+     "curta": "Feriado: “R$ 130,00 (cento e cinquenta reais)” · número e extenso não batem",
+     "pontos": [
+      "Proibido trabalhar em 01/01, 01/05 e 25/12",
+      "Demais feriados: até 18h, com Termo de Acordo enviado aos sindicatos",
+      "Feriado sem folga: “R$ 130,00 (cento e cinquenta reais)”; número e extenso não batem",
+      "Feriado com folga em até 30 dias: R$ 80,00",
+      "Domingo no comércio em geral: só com acordo coletivo"
+     ],
+     "clausula": "CLÁUSULA TRIGÉSIMA NONA - TRABALHO AOS FERIADOS (e cláusula 40ª)",
+     "pag": "14-15",
+     "trecho": "o empregador pagar o valor de R$ 130,00 (cento e cinquenta reais) sem a concessão de folga compensatória, ou R$ 80,00 (oitenta reais) mais folga compensatória"
     },
     "Quebra de caixa": {
      "st": "sim",
-     "curta": "10% do piso",
+     "curta": "10% sobre o piso da categoria",
      "pontos": [
-      "Gratificação de 10% sobre o piso da categoria para caixa ou assemelhado, com reflexo em 13º, férias e rescisão"
+      "Para caixa ou serviço parecido, com reflexo em 13º, férias e rescisão",
+      "Não diz se a base é o piso geral (R$ 1.800,00) ou o de caixa (R$ 1.833,00)"
      ],
      "clausula": "CLÁUSULA DÉCIMA - QUEBRA DE CAIXA",
      "pag": "4",
@@ -178,49 +295,49 @@
     },
     "Horas extras": {
      "st": "sim",
-     "curta": "60% · 100% em feriados e repouso",
+     "curta": "60% na semana · banco de horas só com acordo coletivo",
      "pontos": [
-      "60% na jornada semanal",
-      "Horas em feriados e no repouso, não compensadas: 100%",
-      "Horas extras habituais integram a remuneração",
-      "Sábado após 14h e horário de Natal: 60% ou folga em 30 dias",
-      "Feriados permitidos: R$ 130,00 sem folga ou R$ 80,00 + folga",
-      "Banco de horas só com acordo coletivo"
+      "60% sobre a hora normal na jornada semanal",
+      "Comissionista puro: só o adicional, sobre comissões + DSR",
+      "Banco de horas: só com acordo coletivo, até 10h por dia"
      ],
-     "clausula": "CLÁUSULA TRIGÉSIMA SEGUNDA - HORAS EXTRAORDINÁRIAS (e cláusulas 15ª, 30ª, 35ª e 39ª)",
-     "pag": "5-6, 10-15",
+     "clausula": "CLÁUSULA TRIGÉSIMA SEGUNDA - HORAS EXTRAORDINÁRIAS (e cláusulas 15ª e 35ª)",
+     "pag": "5-6, 12-13",
      "trecho": "Quando prestadas na jornada semanal, as horas suplementares serão remuneradas com o adicional de 60% (sessenta por cento) sobre o valor da hora normal."
-    },
-    "Auxílio creche": {
-     "st": "nao",
-     "curta": "",
-     "pontos": [
-      "A CCT não trata de auxílio creche nem de benefício parecido"
-     ]
     }
    }
   }
  ],
  "alertas": [
   {
-   "nivel": "medio",
-   "titulo": "Número e extenso não batem",
+   "nivel": "alto",
+   "titulo": "Número e extenso com valores diferentes",
    "ccts": [
     "f31c50934a"
    ],
    "pontos": [
-    "Reajuste: “7% (nove e meio por cento)”.",
-    "Prêmio de feriado: “R$ 130,00 (cento e cinquenta reais)”."
+    "Nova Andradina, reajuste: “7% (nove e meio por cento)”. O número e o extenso não batem, e o texto não permite saber qual vale.",
+    "Nova Andradina, feriado sem folga: “R$ 130,00 (cento e cinquenta reais)”. O número e o extenso não batem, e o texto não permite saber qual vale."
    ]
   },
   {
    "nivel": "baixo",
-   "titulo": "Auxílio mãe comerciária aparece como creche no Mediador",
+   "titulo": "Erro de digitação no piso",
    "ccts": [
-    "279e57db96"
+    "821cb168c4"
    ],
    "pontos": [
-    "O Mediador põe a cláusula no grupo “Auxílio Creche”, mas ela não fala em creche. Foi marcada como Parcial."
+    "Novo Hamburgo: o piso do comissionista está escrito “R$ 2.070,00,00”, com “,00” repetido. O extenso (“dois mil e setenta reais”) confirma R$ 2.070,00."
+   ]
+  },
+  {
+   "nivel": "baixo",
+   "titulo": "Prêmio de feriado só para associados",
+   "ccts": [
+    "511962cf10"
+   ],
+   "pontos": [
+    "Novo Hamburgo: o prêmio de R$ 113,00 por feriado trabalhado vale só para associados ao sindicato laboral ou para quem autoriza o desconto da contribuição; os demais têm só a folga."
    ]
   }
  ]

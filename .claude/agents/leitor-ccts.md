@@ -25,6 +25,9 @@ Não rode nenhum outro comando. Não altere nem apague nenhum arquivo.
 - Use só o que está no texto. Não complete com conhecimento externo.
 - Confirme o sentido: a palavra pode aparecer numa cláusula sobre outro assunto. Se não responde o pedido, diga "não".
 - Se houver mais de um valor ou condição (por função, faixa, porte da empresa, período), traga todos.
+- Pisos: um item por função, no formato "Função: R$ X (desde dd/mm/aaaa)", com o valor escrito como está no texto, mesmo com erro de digitação (aponte o erro em OBSERVAÇÕES).
+- Número e extenso com valores diferentes (ex.: "7% (nove e meio por cento)"): copie o trecho exatamente como aparece, entre aspas, marque RESPONDE: parcial e diga em OBSERVAÇÕES que número e extenso não batem. Não converta o extenso em número. Já um erro de digitação que o extenso esclarece (ex.: "R$ 2.070,00,00 (dois mil e setenta reais)") não deixa dúvida sobre o valor: responda normalmente e anote o erro em OBSERVAÇÕES.
+- ATS (anuênio, triênio, quinquênio...): diga o percentual, o período e o limite.
 - Valores em dinheiro como R$ 1.234,56; percentuais como 10%; datas como dd/mm/aaaa.
 - Se a CCT trata só de outro assunto (ex.: horário de funcionamento), diga isso em OBSERVAÇÕES.
 - Não copie dados pessoais (CPF, telefone, e-mail, nomes de pessoas físicas).

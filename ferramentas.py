@@ -16,7 +16,13 @@ Comandos (rodar na pasta do projeto):
           --todos              exige todos os termos na mesma CCT
           --nome "SANTA ROSA"  só arquivos com esse pedaço no nome (loja, cidade, SINDxxxx)
           --situacao           vigente | vencida | futura | sem_vigencia
+          --novas              só as CCTs ainda não analisadas (consulta diária), as mais
+                               recentes primeiro, até o limite_diario do config.json
         Sem --termo, só lista as CCTs que passam nos filtros.
+
+    python ferramentas.py marcar
+        Anota as CCTs de saida/resultado.json como analisadas (saida/analisadas.json),
+        para a consulta diária não repetir. Rodar só depois que o relatório foi enviado.
 
     python ferramentas.py ler <id> --paginas 1-3
         Mostra o texto da CCT (ou só das páginas pedidas). <id> é o código entre
@@ -44,6 +50,8 @@ import pypdfium2 as pdfium  # ~30x mais rápido que o pdfplumber para extrair te
 AQUI = os.path.dirname(os.path.abspath(__file__))
 PASTA_TEXTOS = os.path.join(AQUI, "saida", "textos")
 INDICE = os.path.join(AQUI, "saida", "indice.json")
+ANALISADAS = os.path.join(AQUI, "saida", "analisadas.json")  # CCTs que já saíram num relatório diário
+LIMITE_DIARIO = 10  # se o config.json não tiver "limite_diario"
 
 MESES = {"janeiro": 1, "fevereiro": 2, "marco": 3, "abril": 4, "maio": 5, "junho": 6,
          "julho": 7, "agosto": 8, "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12}
@@ -57,6 +65,11 @@ RE_CLAUSULA = re.compile(r"^[ \t]*(CL[ÁA]USULA[ \t]+[A-ZÀ-Ú \t]{2,60}?)[ \t]+
 RE_CONTROLE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f￾￿]")
 # Topo da 1ª página: "NÚMERO DE REGISTRO NO MTE: RS005053/2025" (é como a CCT é achada no Mediador)
 RE_REGISTRO = re.compile(r"REGISTRO NO MTE:\s*([A-Z]{2}\d{6}/\d{4})")
+# Partes da CCT no cabeçalho: "SINDICATO ..., CNPJ n. 91.695.288/0001-11, neste ato representado(a) por ...;"
+# O nome do representante (pessoa física) fica de fora: só nome do sindicato e CNPJ.
+RE_PARTE = re.compile(r"([^;]+?),\s*CNPJ\s*n\.?\s*([\d.\s/-]+?),\s*neste\s+ato", re.S)
+# A ordem das partes muda de CCT para CCT; o lado dos empregados é reconhecido pelo nome
+RE_LABORAL = re.compile(r"\b(empregad\w*|empreg|trabalhador\w*|trab|comerciari\w*)\b")
 
 
 # ------------------------------------------------------------------ utilidades
@@ -127,6 +140,38 @@ def _registro(cct_id: str) -> str:
     with open(_caminho_texto(cct_id), encoding="utf-8") as f:
         m = RE_REGISTRO.search(f.read(3000))
     return m.group(1) if m else ""
+
+
+def _sindicatos(cct_id: str) -> dict:
+    """{'laboral': [(nome, cnpj)], 'patronal': [...]} lidos do cabeçalho do Mediador.
+    Se não der para separar os lados, devolve {'partes': [...]}; se não achar o cabeçalho, {}."""
+    with open(_caminho_texto(cct_id), encoding="utf-8") as f:
+        topo = f.read(8000)
+    inicio, fim = topo.find("mediador/."), topo.find("celebram")
+    if inicio < 0 or fim < inicio:
+        return {}
+    bloco = topo[inicio + len("mediador/."):fim]
+    # termos aditivos vinculados aparecem antes das partes: não são sindicatos
+    bloco = re.sub(r"^.*(TERMOS? ADITIVO|Processo n|Registro n).*$", "", bloco, flags=re.M | re.I)
+    partes = []
+    for nome, cnpj in RE_PARTE.findall(bloco):
+        nome = re.sub(r"^E\s+", "", " ".join(nome.split()))  # o "E" entre os dois lados
+        partes.append((nome, re.sub(r"\s", "", cnpj)))
+    lados = {"laboral": [], "patronal": []}
+    for nome, cnpj in partes:
+        simples = _normal(nome)
+        laboral = RE_LABORAL.search(simples) and "empregador" not in simples
+        lados["laboral" if laboral else "patronal"].append((nome, cnpj))
+    if lados["laboral"] and lados["patronal"]:
+        return lados
+    return {"partes": partes} if partes else {}
+
+
+def _carregar_analisadas() -> dict:
+    if not os.path.exists(ANALISADAS):
+        return {}
+    with open(ANALISADAS, encoding="utf-8") as f:
+        return json.load(f)
 
 
 def _ler_paginas(cct_id: str) -> list[str]:
@@ -270,6 +315,9 @@ def buscar(args) -> int:
             grupos.setdefault(item["id"], []).append(item["arquivo"])
     if args.situacao:
         grupos = {i: a for i, a in grupos.items() if _situacao(indice["ccts"][i]) == args.situacao}
+    if args.novas:
+        analisadas = _carregar_analisadas()
+        grupos = {i: a for i, a in grupos.items() if i not in analisadas}
 
     # "auxílio-creche" vira o padrão "auxilio\s+creche": acha "AUXÍLIO CRECHE", "auxilio-creche",
     # "Auxílio\ncreche"... Sem \b no final, "creche" também acha "creches".
@@ -297,7 +345,18 @@ def buscar(args) -> int:
         if termos_achados and (not args.todos or len(termos_achados) == len(padroes)):
             achados.append((cct_id, arquivos, paginas_com_termo, trechos))
 
-    achados.sort(key=lambda a: min(a[1]))
+    if args.novas:
+        # a fila anda das CCTs mais recentes para as mais antigas, no máximo limite_diario por dia
+        limite = int(_config().get("limite_diario", LIMITE_DIARIO))
+        fila = len(achados)
+        achados.sort(key=lambda a: (indice["ccts"][a[0]]["vigencia_inicio"], min(a[1])), reverse=True)
+        achados = achados[:limite]
+        resto = fila - len(achados)
+        print(f"Fila da consulta diária: {fila} CCT(s) ainda não analisada(s); hoje entram as {len(achados)} "
+              f"mais recentes (limite_diario = {limite} no config.json)"
+              f"{f'; ficam {resto} para os próximos dias' if resto else ''}.")
+    else:
+        achados.sort(key=lambda a: min(a[1]))
     total_arquivos = sum(len(a[1]) for a in achados)
     print(f"{len(achados)} CCT(s) encontrada(s), usadas por {total_arquivos} arquivo(s) "
           f"(de {len(grupos)} CCTs que passaram nos filtros)")
@@ -383,6 +442,25 @@ def ler(args) -> int:
     return 0
 
 
+# --------------------------------------------------------------------- marcar
+
+def marcar(args) -> int:
+    with open(args.resultado, encoding="utf-8") as f:
+        dados = json.load(f)
+    indice = _carregar_indice()
+    analisadas = _carregar_analisadas()
+    novas = [c["id"] for c in dados.get("ccts", []) if c.get("id") in indice["ccts"] and c["id"] not in analisadas]
+    dia = dados.get("data") or date.today().isoformat()
+    for cct_id in novas:
+        analisadas[cct_id] = {"data": dia, "registro": _registro(cct_id)}
+    with open(ANALISADAS, "w", encoding="utf-8") as f:
+        json.dump(analisadas, f, ensure_ascii=False, indent=1)
+    fila = len(set(indice["ccts"]) - set(analisadas))
+    print(f"{len(novas)} CCT(s) anotada(s) como analisada(s). Total já analisado: {len(analisadas)}; "
+          f"na fila: {fila}.")
+    return 0
+
+
 # ----------------------------------------------------------------------- main
 
 def main() -> int:
@@ -399,6 +477,7 @@ def main() -> int:
     b.add_argument("--situacao", choices=["vigente", "vencida", "futura", "sem_vigencia"])
     b.add_argument("--trechos", type=int, default=3, help="trechos mostrados por CCT (padrão 3)")
     b.add_argument("--limite", type=int, default=30, help="máximo de CCTs mostradas (padrão 30)")
+    b.add_argument("--novas", action="store_true", help="só CCTs ainda não analisadas, até o limite_diario")
 
     l = comandos.add_parser("ler", help="mostra o texto de uma CCT")
     l.add_argument("id", help="id da CCT (mostrado pelo buscar) ou parte do nome do arquivo")
@@ -406,8 +485,11 @@ def main() -> int:
     l.add_argument("--sumario", action="store_true", help="lista as cláusulas (título e página)")
     l.add_argument("--clausula", action="append", default=[], help="mostra só cláusulas com esse termo no título; pode repetir")
 
+    m = comandos.add_parser("marcar", help="anota as CCTs do resultado como analisadas")
+    m.add_argument("--resultado", default=os.path.join(AQUI, "saida", "resultado.json"))
+
     args = parser.parse_args()
-    return {"extrair": extrair, "buscar": buscar, "ler": ler}[args.comando](args)
+    return {"extrair": extrair, "buscar": buscar, "ler": ler, "marcar": marcar}[args.comando](args)
 
 
 if __name__ == "__main__":

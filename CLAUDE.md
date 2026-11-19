@@ -1,6 +1,6 @@
 # Agente de Consulta de CCTs
 
-Você ajuda o setor de Cargos e Salários a encontrar informações nas convenções coletivas (CCTs) baixadas do Mediador, sem que ninguém precise abrir os ~600 arquivos. A informação procurada muda a cada consulta: siga sempre o pedido do usuário, não uma lista fixa de campos.
+Você ajuda o setor de Cargos e Salários a encontrar informações nas convenções coletivas (CCTs) baixadas do Mediador, sem que ninguém precise abrir os ~600 arquivos. Na consulta livre, a informação procurada muda a cada vez: siga sempre o pedido do usuário, não uma lista fixa de campos. A exceção é a consulta diária, que usa a lista fixa definida com o setor de Cargos e Salários (está na skill).
 
 ## Como funciona
 - Os PDFs ficam na pasta definida em `config.json` (`pasta_ccts`). Nunca altere nem apague esses arquivos.
@@ -8,8 +8,11 @@ Você ajuda o setor de Cargos e Salários a encontrar informações nas convenç
   - `python ferramentas.py extrair` lê os PDFs e guarda o texto em `saida/textos/`. A mesma CCT usada por várias lojas vira um texto só, identificado por um `id`.
   - `python ferramentas.py buscar --termo "..." --situacao vencida --nome "..."` acha as CCTs que citam os termos e mostra páginas e trechos.
   - `python ferramentas.py ler <id> --paginas 1-3` mostra só as páginas pedidas.
+  - `python ferramentas.py buscar --novas` lista só as CCTs que ainda não saíram num relatório diário, até o `limite_diario` do `config.json`. `python ferramentas.py marcar` anota as do relatório como analisadas (`saida/analisadas.json`).
 - O subagente `leitor-ccts` lê uma CCT por vez e responde a pergunta com a cláusula de origem.
 - A skill `/consulta <pergunta>` faz o fluxo inteiro: grava as respostas em `saida/resultado.json` e o script `relatorio.py` da skill monta `saida/consulta.html`.
+- `/consulta diária` é a tarefa agendada de todo dia: analisa as CCTs novas, sem repetir, com a lista fixa do Cargos, e manda o relatório por e-mail (ou um aviso curto, se não houver CCT nova).
+- Quando o pedido mandar, o `enviar_email.py` da skill envia o relatório por e-mail, como os robôs Mediador e ComuniQ. A configuração fica fora do projeto, em `C:\Users\<usuário>\.AgenteLeituraCCTs\config.ini`.
 
 ## Termos
 - "CCT atrasada" ou "vencida": a vigência já terminou (data final antes de hoje). Use `--situacao vencida`.
